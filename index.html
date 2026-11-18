@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex">
+<title>Colossus · Devenir testeur</title>
+<meta name="description" content="Colossus, jeu iPhone en cours de développement : inscris-toi pour recevoir l'invitation TestFlight.">
+<style>
+  :root {
+    --fond: #f4efe4;          /* ivoire chaud */
+    --carte: #fbf8f1;
+    --texte: #2b2824;         /* pierre sombre */
+    --doux: #6b655b;          /* pierre moyenne */
+    --trait: #d9d1c1;
+    --or: #a8823a;            /* or discret */
+    --or-fonce: #8a6a2c;
+    --herbe: #56683a;         /* vert d'herbe sourd */
+    --herbe-fond: #e7ead9;
+    --erreur: #9b3b2a;
+    --erreur-fond: #f6e4de;
+    --bouton-texte: #fbf8f1;
+    --ombre: 0 1px 2px rgba(43, 40, 36, .06), 0 8px 24px rgba(43, 40, 36, .06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fond: #1b1a17;
+      --carte: #24221e;
+      --texte: #ece6d8;
+      --doux: #a9a294;
+      --trait: #3a372f;
+      --or: #c9a55c;
+      --or-fonce: #d8b873;
+      --herbe: #a4b77f;
+      --herbe-fond: #2a2f22;
+      --erreur: #e7957f;
+      --erreur-fond: #3a2620;
+      --bouton-texte: #1b1a17;
+      --ombre: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--fond);
+    color: var(--texte);
+    font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow-x: hidden;
+  }
+  .demo {
+    margin: 0; padding: 6px 16px;
+    background: var(--texte); color: var(--fond);
+    font-size: 13px; text-align: center; letter-spacing: .02em;
+  }
+  .demo[hidden] { display: none; }
+
+  .tete { position: relative; max-width: 720px; margin: 0 auto; }
+  @media (min-width: 760px) {
+    .tete { max-width: 640px; margin-top: 24px; border-radius: 12px 12px 0 0; overflow: hidden; }
+  }
+  .tete img {
+    display: block; width: 100%; height: auto;
+    aspect-ratio: 1100 / 886; object-fit: cover;
+    background: #e9e6d8;
+  }
+  .tete::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 22%;
+    background: linear-gradient(to bottom, transparent, var(--fond));
+    pointer-events: none;
+  }
+  .titre {
+    position: absolute; top: 7%; left: 0; right: 0;
+    text-align: center; color: #2f2c27; padding: 0 16px;
+  }
+  .titre h1 {
+    margin: 0; font-weight: 700;
+    font-size: clamp(30px, 10vw, 54px);
+    letter-spacing: .28em; margin-right: -.28em; /* équilibre l'espacement final */
+    line-height: 1.1;
+  }
+  .titre .filet {
+    width: 56px; height: 2px; margin: 12px auto 0; background: #a8823a;
+  }
+
+  main { max-width: 560px; margin: 0 auto; padding: 4px 16px 48px; }
+  .accroche { font-size: 19px; line-height: 1.45; margin: 0 0 16px; }
+  .points { list-style: none; margin: 0 0 20px; padding: 0; }
+  .points li {
+    position: relative; padding: 6px 0 6px 22px; color: var(--texte);
+    border-top: 1px solid var(--trait);
+  }
+  .points li:last-child { border-bottom: 1px solid var(--trait); }
+  .points li::before {
+    content: ""; position: absolute; left: 2px; top: 15px;
+    width: 8px; height: 8px; background: var(--or); transform: rotate(45deg);
+  }
+  .iphone {
+    margin: 0 0 28px; padding: 10px 14px;
+    background: var(--herbe-fond); color: var(--texte);
+    border-left: 3px solid var(--herbe); border-radius: 4px;
+    font-size: 16px;
+  }
+  .iphone strong { color: var(--herbe); }
+
+  .carte {
+    background: var(--carte); border: 1px solid var(--trait);
+    border-radius: 10px; padding: 20px 16px; box-shadow: var(--ombre);
+  }
+  .carte h2 { margin: 0 0 4px; font-size: 21px; }
+  .carte .sous { margin: 0 0 18px; color: var(--doux); font-size: 15px; }
+
+  .champ { margin: 0 0 14px; }
+  label, .legende { display: block; font-weight: 600; font-size: 15px; margin: 0 0 6px; }
+  .requis { color: var(--or-fonce); font-weight: 600; }
+  input[type=text], input[type=email] {
+    display: block; width: 100%;
+    font: inherit; font-size: 17px; color: var(--texte);
+    background: var(--fond); border: 1px solid var(--trait); border-radius: 8px;
+    padding: 11px 12px; min-height: 46px;
+    -webkit-appearance: none; appearance: none;
+  }
+  input:focus-visible, button:focus-visible, .choix input:focus-visible + span {
+    outline: 2px solid var(--or); outline-offset: 2px;
+  }
+  input[aria-invalid=true] { border-color: var(--erreur); }
+  .err { color: var(--erreur); font-size: 14px; margin: 4px 0 0; min-height: 0; }
+  .err:empty { display: none; }
+  .deux { display: grid; grid-template-columns: 1fr; gap: 0 12px; }
+  @media (min-width: 520px) { .deux { grid-template-columns: 1fr 1fr; } }
+
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+  legend { float: left; width: 100%; padding: 0; }
+  legend + * { clear: both; }
+  .facultatif {
+    margin: 22px 0 18px; padding: 16px 0 0; border-top: 1px dashed var(--trait);
+  }
+  .etiquette {
+    display: inline-block; margin: 0 0 8px; padding: 2px 8px;
+    font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--herbe); border: 1px solid var(--herbe); border-radius: 999px;
+  }
+  .facultatif .legende { font-size: 16px; margin-bottom: 4px; }
+  .facultatif .aide { margin: 0 0 10px; color: var(--doux); font-size: 14px; }
+  .choix { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 4px; }
+  .choix label { margin: 0; font-weight: 500; font-size: 15px; cursor: pointer; }
+  .choix input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .choix span {
+    display: inline-block; padding: 9px 12px; min-height: 40px;
+    border: 1px solid var(--trait); border-radius: 999px; background: var(--fond);
+  }
+  .choix input:checked + span {
+    border-color: var(--herbe); background: var(--herbe-fond); color: var(--texte);
+    box-shadow: inset 0 0 0 1px var(--herbe);
+  }
+  .suite { margin: 14px 0 0; }
+  .suite[hidden] { display: none; }
+  .cases { display: grid; gap: 6px; margin: 0 0 14px; }
+  .cases label {
+    display: flex; align-items: center; gap: 10px;
+    margin: 0; font-weight: 400; font-size: 16px; cursor: pointer; min-height: 36px;
+  }
+  .cases input { width: 20px; height: 20px; accent-color: var(--herbe); margin: 0; flex: none; }
+
+  button[type=submit] {
+    display: block; width: 100%; min-height: 50px; margin: 6px 0 0;
+    font: inherit; font-weight: 600; font-size: 17px; letter-spacing: .02em;
+    color: var(--bouton-texte); background: var(--texte);
+    border: 0; border-radius: 8px; cursor: pointer;
+    box-shadow: inset 0 -2px 0 var(--or);
+  }
+  button[type=submit]:disabled { opacity: .6; cursor: progress; }
+  .confiance { margin: 12px 0 0; color: var(--doux); font-size: 14px; line-height: 1.45; }
+  .echec {
+    margin: 12px 0 0; padding: 10px 12px; border-radius: 8px;
+    background: var(--erreur-fond); color: var(--erreur); font-size: 15px;
+  }
+  .echec[hidden] { display: none; }
+
+  .piege { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+  .merci { text-align: center; padding: 12px 4px; }
+  .merci:focus { outline: none; }
+  .merci[hidden] { display: none; }
+  .merci .losange {
+    width: 14px; height: 14px; margin: 4px auto 14px; background: var(--or); transform: rotate(45deg);
+  }
+  .merci h2 { margin: 0 0 8px; }
+  .merci p { margin: 0; color: var(--doux); }
+
+  footer { max-width: 560px; margin: 0 auto; padding: 0 20px 32px; color: var(--doux); font-size: 13px; text-align: center; }
+</style>
+</head>
+<body>
+<p class="demo" id="demo" hidden data-t="demo"></p>
+
+<header class="tete">
+  <img src="colosse.jpg" width="1100" height="886" alt="" data-t-alt="imageAlt">
+  <div class="titre">
+    <h1>COLOSSUS</h1>
+    <div class="filet"></div>
+  </div>
+</header>
+
+<main>
+  <p class="accroche" data-t="accroche"></p>
+  <ul class="points">
+    <li data-t="point1"></li>
+    <li data-t="point2"></li>
+    <li data-t="point3"></li>
+    <li data-t="point4"></li>
+  </ul>
+  <p class="iphone" data-t-html="iphone"></p>
+
+  <section class="carte" aria-labelledby="titre-form">
+    <form id="form" novalidate>
+      <h2 id="titre-form" data-t="formTitre"></h2>
+      <p class="sous" data-t="formSous"></p>
+
+      <div class="deux">
+        <div class="champ">
+          <label for="prenom"><span data-t="prenom"></span> <span class="requis" aria-hidden="true">*</span></label>
+          <input id="prenom" name="prenom" type="text" autocomplete="given-name" required maxlength="80" aria-describedby="prenom-err">
+          <p class="err" id="prenom-err" aria-live="polite"></p>
+        </div>
+        <div class="champ">
+          <label for="nom"><span data-t="nom"></span> <span class="requis" aria-hidden="true">*</span></label>
+          <input id="nom" name="nom" type="text" autocomplete="family-name" required maxlength="80" aria-describedby="nom-err">
+          <p class="err" id="nom-err" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="champ">
+        <label for="email"><span data-t="email"></span> <span class="requis" aria-hidden="true">*</span></label>
+        <input id="email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" required maxlength="160" aria-describedby="email-err">
+        <p class="err" id="email-err" aria-live="polite"></p>
+      </div>
+
+      <!-- Champ piège contre les robots : un humain ne le voit pas et le laisse vide. -->
+      <div class="piege" aria-hidden="true">
+        <label for="site_web">Site web</label>
+        <input id="site_web" name="site_web" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="facultatif">
+      <span class="etiquette" data-t="facultatif"></span>
+      <fieldset>
+        <legend class="legende" data-t="coopQuestion"></legend>
+        <p class="aide" data-t="coopAide"></p>
+        <div class="choix" role="radiogroup">
+          <label><input type="radio" name="coop" value="oui"><span data-t="coopOui"></span></label>
+          <label><input type="radio" name="coop" value="peut-etre"><span data-t="coopPeutEtre"></span></label>
+          <label><input type="radio" name="coop" value="pas-pour-l-instant"><span data-t="coopNon"></span></label>
+        </div>
+
+        <div class="suite" id="suite" hidden>
+          <fieldset>
+            <legend class="legende" data-t="quandQuestion"></legend>
+            <div class="cases">
+              <label><input type="checkbox" name="moments" value="semaine-soir"><span data-t="quandSemaineSoir"></span></label>
+              <label><input type="checkbox" name="moments" value="weekend-journee"><span data-t="quandWeekendJour"></span></label>
+              <label><input type="checkbox" name="moments" value="weekend-soir"><span data-t="quandWeekendSoir"></span></label>
+              <label><input type="checkbox" name="moments" value="ca-depend"><span data-t="quandDepend"></span></label>
+            </div>
+          </fieldset>
+          <div class="champ">
+            <label for="precision" data-t="precision"></label>
+            <input id="precision" name="precision" type="text" maxlength="200" autocomplete="off" data-t-ph="precisionPh">
+          </div>
+        </div>
+      </fieldset>
+      </div>
+
+      <button type="submit" id="envoyer" data-t="bouton"></button>
+      <p class="echec" id="echec" role="alert" hidden></p>
+      <p class="confiance" data-t="confiance"></p>
+    </form>
+
+    <div class="merci" id="merci" hidden tabindex="-1">
+      <div class="losange"></div>
+      <h2 data-t="merciTitre"></h2>
+      <p data-t="merciTexte"></p>
+    </div>
+  </section>
+</main>
+
+<footer data-t="pied"></footer>
+
+<script>
+/* =====================================================================
+   CONFIGURATION DE L'ENVOI : la seule chose à changer avant de publier.
+   ---------------------------------------------------------------------
+   Tant que ENVOI.url est vide, la page est en mode DÉMONSTRATION :
+   rien n'est envoyé, le bandeau « démonstration » est visible en haut.
+
+   Mode "json" (Formspree ou tout service qui accepte du JSON) :
+     ENVOI = { mode: "json", url: "https://formspree.io/f/XXXXXXX" };
+     -> POST JSON, en-têtes Content-Type et Accept: application/json.
+        Réussite si la réponse est 2xx.
+        Corps envoyé : { prenom, nom, email, coop, moments, precision, langue }
+        (moments : texte, valeurs séparées par des virgules).
+
+   Mode "google" (formulaire Google) :
+     ENVOI = { mode: "google",
+               url: "https://docs.google.com/forms/d/e/<ID>/formResponse",
+               champs: { prenom: "entry.111", nom: "entry.222", email: "entry.333",
+                         coop: "entry.444", moments: "entry.555", precision: "entry.666" } };
+     -> POST application/x-www-form-urlencoded en mode no-cors. La réponse
+        est illisible (opaque) : seule une panne réseau est vue comme un échec.
+        Les numéros entry.XXXX se lisent dans « Obtenir le lien prérempli ».
+        Côté Google : questions en « Réponse courte » (ou « Choix multiples » /
+        « Cases à cocher » avec exactement les mêmes valeurs que ci-dessous),
+        et pas de connexion Google obligatoire. Un champ laissé vide n'est pas
+        envoyé ; « moments » envoie une valeur par case cochée.
+   ===================================================================== */
+const ENVOI = { mode: "json", url: "", champs: {} };
+
+/* ===== TEXTES : tous ici, pour ajouter une autre langue facilement. ===== */
+const TEXTES = {
+  fr: {
+    demo: "Démonstration\u00a0: rien n'est envoyé.",
+    imageAlt: "Un colosse de pierre couvert de mousse broute dans une prairie.",
+    accroche: "Colossus est un jeu iPhone d'aventure en vue de dessus, en portrait.",
+    point1: "Un héros à pied et à cheval.",
+    point2: "Des colosses immenses qu'on escalade.",
+    point3: "Une épée, un arc, une corde.",
+    point4: "En coop jusqu'à 4 joueurs.",
+    iphone: "Le jeu est en cours de développement. Les tests se feront par TestFlight\u00a0: <strong>il faut un iPhone</strong>.",
+    formTitre: "Devenir testeur",
+    formSous: "Tu recevras l'invitation TestFlight par e\u2011mail le jour où les tests commencent.",
+    prenom: "Prénom",
+    nom: "Nom",
+    email: "E-mail",
+    facultatif: "Facultatif",
+    coopQuestion: "Une partie en coop à plusieurs, ça te dirait\u00a0?",
+    coopAide: "Pour savoir qui serait partant. Ça n'engage à rien.",
+    coopOui: "Oui",
+    coopPeutEtre: "Peut-être",
+    coopNon: "Pas pour l'instant",
+    quandQuestion: "Plutôt quand\u00a0?",
+    quandSemaineSoir: "En semaine le soir",
+    quandWeekendJour: "Le week-end en journée",
+    quandWeekendSoir: "Le week-end le soir",
+    quandDepend: "Ça dépend",
+    precision: "Une précision\u00a0?",
+    precisionPh: "Fuseau horaire, jours…",
+    bouton: "Je veux tester",
+    envoiEnCours: "Envoi…",
+    confiance: "Ton adresse sert seulement à t'envoyer l'invitation TestFlight et à organiser les tests. Elle n'est ni publiée ni partagée. Tu peux demander à être retiré à tout moment.",
+    errPrenom: "Indique ton prénom.",
+    errNom: "Indique ton nom.",
+    errEmailVide: "Indique ton adresse e-mail.",
+    errEmail: "Cette adresse e-mail ne semble pas valide.",
+    echec: "L'envoi n'a pas marché. Tes réponses sont gardées\u00a0: vérifie ta connexion et réessaie.",
+    merciTitre: "C'est noté.",
+    merciTexte: "Tu recevras l'invitation TestFlight par e\u2011mail le jour où les tests commencent.",
+    pied: "Colossus · jeu en cours de développement"
+  }
+};
+const LANGUE = "fr";
+const T = TEXTES[LANGUE];
+
+/* ===== Mise en place des textes ===== */
+document.documentElement.lang = LANGUE;
+document.querySelectorAll("[data-t]").forEach(el => { el.textContent = T[el.dataset.t]; });
+document.querySelectorAll("[data-t-html]").forEach(el => { el.innerHTML = T[el.dataset.tHtml]; });
+document.querySelectorAll("[data-t-ph]").forEach(el => { el.placeholder = T[el.dataset.tPh]; });
+document.querySelectorAll("[data-t-alt]").forEach(el => { el.alt = T[el.dataset.tAlt]; });
+
+const DEMO = !ENVOI.url;
+document.getElementById("demo").hidden = !DEMO;
+
+/* ===== Bloc facultatif : « Plutôt quand ? » seulement si Oui ou Peut-être ===== */
+const form = document.getElementById("form");
+const suite = document.getElementById("suite");
+function majSuite() {
+  const v = (form.querySelector("input[name=coop]:checked") || {}).value;
+  suite.hidden = !(v === "oui" || v === "peut-etre");
+}
+form.querySelectorAll("input[name=coop]").forEach(r => r.addEventListener("change", majSuite));
+
+/* ===== Validation ===== */
+const RE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function erreur(id, msg) {
+  const input = document.getElementById(id);
+  document.getElementById(id + "-err").textContent = msg || "";
+  if (msg) input.setAttribute("aria-invalid", "true"); else input.removeAttribute("aria-invalid");
+  return !msg;
+}
+function valider() {
+  const p = form.prenom.value.trim(), n = form.nom.value.trim(), e = form.email.value.trim();
+  const ok = [
+    erreur("prenom", p ? "" : T.errPrenom),
+    erreur("nom", n ? "" : T.errNom),
+    erreur("email", !e ? T.errEmailVide : (RE_EMAIL.test(e) ? "" : T.errEmail))
+  ];
+  const premier = ["prenom", "nom", "email"][ok.indexOf(false)];
+  if (premier) document.getElementById(premier).focus();
+  return !premier;
+}
+["prenom", "nom", "email"].forEach(id =>
+  document.getElementById(id).addEventListener("input", () => {
+    if (document.getElementById(id).getAttribute("aria-invalid")) erreur(id, "");
+  }));
+
+/* ===== Données envoyées ===== */
+function donnees() {
+  const coop = (form.querySelector("input[name=coop]:checked") || {}).value || "";
+  const avecSuite = coop === "oui" || coop === "peut-etre";
+  const moments = avecSuite ? [...form.querySelectorAll("input[name=moments]:checked")].map(c => c.value) : [];
+  return {
+    prenom: form.prenom.value.trim(),
+    nom: form.nom.value.trim(),
+    email: form.email.value.trim(),
+    coop: coop,
+    moments: moments,
+    precision: avecSuite ? form.precision.value.trim() : "",
+    langue: LANGUE
+  };
+}
+
+async function envoyer(d) {
+  if (DEMO) { await new Promise(r => setTimeout(r, 400)); return; }
+  if (ENVOI.mode === "google") {
+    const c = ENVOI.champs || {}, corps = new URLSearchParams();
+    for (const cle of ["prenom", "nom", "email", "coop", "precision"])
+      if (c[cle] && d[cle]) corps.append(c[cle], d[cle]);
+    if (c.moments) d.moments.forEach(m => corps.append(c.moments, m));
+    await fetch(ENVOI.url, { method: "POST", mode: "no-cors", body: corps });
+    return; // réponse opaque : pas d'exception = considéré comme envoyé
+  }
+  const r = await fetch(ENVOI.url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify({ ...d, moments: d.moments.join(", ") })
+  });
+  if (!r.ok) throw new Error("HTTP " + r.status);
+}
+
+const bouton = document.getElementById("envoyer");
+const echec = document.getElementById("echec");
+const merci = document.getElementById("merci");
+
+form.addEventListener("submit", async ev => {
+  ev.preventDefault();
+  echec.hidden = true;
+  if (!valider()) return;
+  if (form.site_web.value) { finir(); return; } // robot : on fait semblant
+  bouton.disabled = true; bouton.textContent = T.envoiEnCours;
+  try {
+    await envoyer(donnees());
+    finir();
+  } catch (e) {
+    echec.textContent = T.echec; echec.hidden = false;
+    bouton.disabled = false; bouton.textContent = T.bouton;
+  }
+});
+
+function finir() {
+  form.hidden = true;
+  merci.hidden = false;
+  merci.focus();
+  merci.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+</script>
+</body>
+</html>
