@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <meta name="robots" content="noindex">
-<title>Colossus · Devenir testeur</title>
-<meta name="description" content="Colossus, jeu iPhone en cours de développement : inscris-toi pour recevoir l'invitation TestFlight.">
+<title>Colossus · Become a tester</title>
+<meta name="description" content="Colossus, an iPhone game in development: sign up to get the TestFlight invite.">
 <style>
   :root {
     --fond: #f4efe4;          /* ivoire chaud */
@@ -238,7 +238,7 @@
 
       <!-- Champ piège contre les robots : un humain ne le voit pas et le laisse vide. -->
       <div class="piege" aria-hidden="true">
-        <label for="site_web">Site web</label>
+        <label for="site_web">Website</label>
         <input id="site_web" name="site_web" type="text" tabindex="-1" autocomplete="off">
       </div>
 
@@ -248,19 +248,19 @@
         <legend class="legende" data-t="coopQuestion"></legend>
         <p class="aide" data-t="coopAide"></p>
         <div class="choix" role="radiogroup">
-          <label><input type="radio" name="coop" value="oui"><span data-t="coopOui"></span></label>
-          <label><input type="radio" name="coop" value="peut-etre"><span data-t="coopPeutEtre"></span></label>
-          <label><input type="radio" name="coop" value="pas-pour-l-instant"><span data-t="coopNon"></span></label>
+          <label><input type="radio" name="coop" value="yes"><span data-t="coopOui"></span></label>
+          <label><input type="radio" name="coop" value="maybe"><span data-t="coopPeutEtre"></span></label>
+          <label><input type="radio" name="coop" value="not-now"><span data-t="coopNon"></span></label>
         </div>
 
         <div class="suite" id="suite" hidden>
           <fieldset>
             <legend class="legende" data-t="quandQuestion"></legend>
             <div class="cases">
-              <label><input type="checkbox" name="moments" value="semaine-soir"><span data-t="quandSemaineSoir"></span></label>
-              <label><input type="checkbox" name="moments" value="weekend-journee"><span data-t="quandWeekendJour"></span></label>
-              <label><input type="checkbox" name="moments" value="weekend-soir"><span data-t="quandWeekendSoir"></span></label>
-              <label><input type="checkbox" name="moments" value="ca-depend"><span data-t="quandDepend"></span></label>
+              <label><input type="checkbox" name="moments" value="weekday-evenings"><span data-t="quandSemaineSoir"></span></label>
+              <label><input type="checkbox" name="moments" value="weekend-daytime"><span data-t="quandWeekendJour"></span></label>
+              <label><input type="checkbox" name="moments" value="weekend-evenings"><span data-t="quandWeekendSoir"></span></label>
+              <label><input type="checkbox" name="moments" value="it-depends"><span data-t="quandDepend"></span></label>
             </div>
           </fieldset>
           <div class="champ">
@@ -311,9 +311,17 @@
         Côté Google : questions en « Réponse courte » (ou « Choix multiples » /
         « Cases à cocher » avec exactement les mêmes valeurs que ci-dessous),
         et pas de connexion Google obligatoire. Un champ laissé vide n'est pas
-        envoyé ; « moments » envoie une valeur par case cochée.
+        envoyé ; « moments » part en un seul texte (cases séparées par des
+        virgules), pour une question Google en réponse courte.
    ===================================================================== */
-const ENVOI = { mode: "json", url: "", champs: {} };
+const ENVOI = {
+  mode: "google",
+  url: "https://docs.google.com/forms/d/e/1FAIpQLSci51_YFKEeMMZMcknFnKMiPo82PJnZUPP2nQTQust3Nnu6Mw/formResponse",
+  champs: {
+    prenom: "entry.1166778934", nom: "entry.1344912385", email: "entry.67140441",
+    coop: "entry.585634685", moments: "entry.462675093", precision: "entry.1260451325"
+  }
+};
 
 /* ===== TEXTES : tous ici, pour ajouter une autre langue facilement. ===== */
 const TEXTES = {
@@ -355,9 +363,48 @@ const TEXTES = {
     merciTitre: "C'est noté.",
     merciTexte: "Tu recevras l'invitation TestFlight par e\u2011mail le jour où les tests commencent.",
     pied: "Colossus · jeu en cours de développement"
+  },
+  en: {
+    demo: "Demo: nothing is sent.",
+    imageAlt: "A moss-covered stone colossus grazing in a meadow.",
+    accroche: "Colossus is an iPhone adventure game, played top-down in portrait.",
+    point1: "A hero on foot and on horseback.",
+    point2: "Huge colossi you climb.",
+    point3: "A sword, a bow, a rope.",
+    point4: "Co-op for up to 4 players.",
+    iphone: "The game is still in development. Testing will run through TestFlight: <strong>you need an iPhone</strong>.",
+    formTitre: "Become a tester",
+    formSous: "You'll get the TestFlight invite by email the day testing starts.",
+    prenom: "First name",
+    nom: "Last name",
+    email: "Email",
+    facultatif: "Optional",
+    coopQuestion: "Up for a co-op game with others?",
+    coopAide: "Just to see who'd be in. No commitment.",
+    coopOui: "Yes",
+    coopPeutEtre: "Maybe",
+    coopNon: "Not for now",
+    quandQuestion: "When suits you?",
+    quandSemaineSoir: "Weekday evenings",
+    quandWeekendJour: "Weekend daytime",
+    quandWeekendSoir: "Weekend evenings",
+    quandDepend: "It depends",
+    precision: "Anything to add?",
+    precisionPh: "Time zone, days…",
+    bouton: "I want to test",
+    envoiEnCours: "Sending…",
+    confiance: "Your email is only used to send you the TestFlight invite and to organise testing. It is never published or shared. You can ask to be removed at any time.",
+    errPrenom: "Please enter your first name.",
+    errNom: "Please enter your last name.",
+    errEmailVide: "Please enter your email address.",
+    errEmail: "This email address doesn't look right.",
+    echec: "That didn't go through. Your answers are kept: check your connection and try again.",
+    merciTitre: "You're in.",
+    merciTexte: "You'll get the TestFlight invite by email the day testing starts.",
+    pied: "Colossus · game in development"
   }
 };
-const LANGUE = "fr";
+const LANGUE = "en";
 const T = TEXTES[LANGUE];
 
 /* ===== Mise en place des textes ===== */
@@ -375,7 +422,7 @@ const form = document.getElementById("form");
 const suite = document.getElementById("suite");
 function majSuite() {
   const v = (form.querySelector("input[name=coop]:checked") || {}).value;
-  suite.hidden = !(v === "oui" || v === "peut-etre");
+  suite.hidden = !(v === "yes" || v === "maybe");
 }
 form.querySelectorAll("input[name=coop]").forEach(r => r.addEventListener("change", majSuite));
 
@@ -406,7 +453,7 @@ function valider() {
 /* ===== Données envoyées ===== */
 function donnees() {
   const coop = (form.querySelector("input[name=coop]:checked") || {}).value || "";
-  const avecSuite = coop === "oui" || coop === "peut-etre";
+  const avecSuite = coop === "yes" || coop === "maybe";
   const moments = avecSuite ? [...form.querySelectorAll("input[name=moments]:checked")].map(c => c.value) : [];
   return {
     prenom: form.prenom.value.trim(),
@@ -423,9 +470,9 @@ async function envoyer(d) {
   if (DEMO) { await new Promise(r => setTimeout(r, 400)); return; }
   if (ENVOI.mode === "google") {
     const c = ENVOI.champs || {}, corps = new URLSearchParams();
-    for (const cle of ["prenom", "nom", "email", "coop", "precision"])
-      if (c[cle] && d[cle]) corps.append(c[cle], d[cle]);
-    if (c.moments) d.moments.forEach(m => corps.append(c.moments, m));
+    const g = { ...d, moments: d.moments.join(", ") };
+    for (const cle of ["prenom", "nom", "email", "coop", "moments", "precision"])
+      if (c[cle] && g[cle]) corps.append(c[cle], g[cle]);
     await fetch(ENVOI.url, { method: "POST", mode: "no-cors", body: corps });
     return; // réponse opaque : pas d'exception = considéré comme envoyé
   }
